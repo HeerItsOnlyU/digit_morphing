@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digit Morphing</title>
+
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family: "Segoe UI", Tahoma, sans-serif;
+        }
+
+        body{
+            min-height:100vh;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            padding:30px;
+        }
+
+        .container{
+            width:100%;
+            max-width:850px;
+            background:#fff;
+            border-radius:18px;
+            box-shadow: 0px 10px 30px rgba(0,0,0,0.25);
+            overflow:hidden;
+        }
+
+        .header{
+            padding:25px;
+            text-align:center;
+            background: linear-gradient(135deg,#ff512f,#dd2476);
+            color:#fff;
+        }
+
+        .header h2{
+            font-size:26px;
+            font-weight:700;
+        }
+
+        .header p{
+            margin-top:8px;
+            font-size:14px;
+            opacity:0.9;
+        }
+
+        .content{
+            padding:30px;
+        }
+
+        form{
+            display:grid;
+            grid-template-columns: 1fr 1fr;
+            gap:20px;
+        }
+
+        .form-group{
+            display:flex;
+            flex-direction:column;
+        }
+
+        label{
+            font-size:14px;
+            font-weight:600;
+            margin-bottom:8px;
+            color:#333;
+        }
+
+        input[type="file"], input[type="number"]{
+            padding:12px;
+            border:1px solid #ddd;
+            border-radius:10px;
+            outline:none;
+            transition: 0.2s;
+            font-size:14px;
+        }
+
+        input[type="file"]:hover,
+        input[type="number"]:focus{
+            border-color:#dd2476;
+            box-shadow: 0 0 0 4px rgba(221,36,118,0.15);
+        }
+
+        .full-width{
+            grid-column: 1 / -1;
+        }
+
+        button{
+            padding:14px;
+            border:none;
+            border-radius:12px;
+            background: linear-gradient(135deg,#ff512f,#dd2476);
+            color:white;
+            font-size:16px;
+            font-weight:600;
+            cursor:pointer;
+            transition: 0.25s;
+        }
+
+        button:hover{
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(221,36,118,0.35);
+        }
+
+        .message{
+            margin-top:20px;
+            padding:12px 15px;
+            border-radius:12px;
+            background: #eaffea;
+            border: 1px solid #2ecc71;
+            color:#116b2d;
+            font-weight:600;
+            font-size:14px;
+        }
+
+        .frames-section{
+            margin-top:30px;
+        }
+
+        .frames-section h3,
+        .video-section h3{
+            font-size:18px;
+            font-weight:700;
+            margin-bottom:12px;
+            color:#333;
+        }
+
+        .frames-grid{
+            display:grid;
+            grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+            gap:12px;
+        }
+
+        .frame-item{
+            background:#f8f8f8;
+            border:1px solid #eee;
+            border-radius:12px;
+            padding:10px;
+            display:flex;
+            justify-content:center;
+            align-items:center;
+            transition:0.2s;
+        }
+
+        .frame-item:hover{
+            border-color:#dd2476;
+            transform: scale(1.05);
+            box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+        }
+
+        .frame-item img{
+            width:80px;
+            height:auto;
+            border-radius:8px;
+        }
+
+        .video-section{
+            margin-top:30px;
+            text-align:center;
+        }
+
+        video{
+            width:100%;
+            max-width:500px;
+            border-radius:15px;
+            border:3px solid #dd2476;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.18);
+        }
+
+        @media(max-width:650px){
+            form{
+                grid-template-columns:1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h2>Handwritten Digit Morphing</h2>
+            <p>Upload two digit images and generate smooth morphing frames + video</p>
+        </div>
+
+        <div class="content">
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <div class="form-group">
+                    <label>Upload Image A</label>
+                    <input type="file" name="image_a" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Upload Image B</label>
+                    <input type="file" name="image_b" required>
+                </div>
+
+                <div class="form-group full-width">
+                    <label>Number of Steps</label>
+                    <input type="number" name="steps" min="2" value="10" required>
+                </div>
+
+                <div class="full-width">
+                    <button type="submit">✨ Start Morphing</button>
+                </div>
+            </form>
+
+            {% if message %}
+                <div class="message">
+                    ✅ {{ message }} <br>
+                    <b>Steps:</b> {{ steps }}
+                </div>
+            {% endif %}
+
+            {% if frames %}
+            <div class="frames-section">
+                <h3>Generated Frames</h3>
+                <div class="frames-grid">
+                    {% for frame in frames %}
+                        <div class="frame-item">
+                            <img src="{{ frame }}" alt="Frame">
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            {% if video_url %}
+            <div class="video-section">
+                <h3>Generated Morphing Video</h3>
+                <video controls>
+                    <source src="{{ video_url }}" type="video/mp4">
+                    Your browser does not support video playback.
+                </video>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
