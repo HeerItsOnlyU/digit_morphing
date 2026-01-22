@@ -16,7 +16,6 @@ media/
 staticfiles/
 
 # ML / Data
-data/
 mnist_vae.pth
 frames/
 output/
