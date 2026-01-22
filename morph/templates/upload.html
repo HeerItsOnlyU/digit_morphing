@@ -1,180 +1,182 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Digit Morphing</title>
 
     <style>
-        *{
-            margin:0;
-            padding:0;
-            box-sizing:border-box;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
             font-family: "Segoe UI", Tahoma, sans-serif;
         }
 
-        body{
-            min-height:100vh;
+        body {
+            min-height: 100vh;
             background: linear-gradient(135deg, #1e3c72, #2a5298);
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            padding:30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
         }
 
-        .container{
-            width:100%;
-            max-width:850px;
-            background:#fff;
-            border-radius:18px;
-            box-shadow: 0px 10px 30px rgba(0,0,0,0.25);
-            overflow:hidden;
+        .container {
+            width: 100%;
+            max-width: 850px;
+            background: #fff;
+            border-radius: 18px;
+            box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
         }
 
-        .header{
-            padding:25px;
-            text-align:center;
-            background: linear-gradient(135deg,#ff512f,#dd2476);
-            color:#fff;
+        .header {
+            padding: 25px;
+            text-align: center;
+            background: linear-gradient(135deg, #ff512f, #dd2476);
+            color: #fff;
         }
 
-        .header h2{
-            font-size:26px;
-            font-weight:700;
+        .header h2 {
+            font-size: 26px;
+            font-weight: 700;
         }
 
-        .header p{
-            margin-top:8px;
-            font-size:14px;
-            opacity:0.9;
+        .header p {
+            margin-top: 8px;
+            font-size: 14px;
+            opacity: 0.9;
         }
 
-        .content{
-            padding:30px;
+        .content {
+            padding: 30px;
         }
 
-        form{
-            display:grid;
+        form {
+            display: grid;
             grid-template-columns: 1fr 1fr;
-            gap:20px;
+            gap: 20px;
         }
 
-        .form-group{
-            display:flex;
-            flex-direction:column;
+        .form-group {
+            display: flex;
+            flex-direction: column;
         }
 
-        label{
-            font-size:14px;
-            font-weight:600;
-            margin-bottom:8px;
-            color:#333;
+        label {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
         }
 
-        input[type="file"], input[type="number"]{
-            padding:12px;
-            border:1px solid #ddd;
-            border-radius:10px;
-            outline:none;
+        input[type="file"],
+        input[type="number"] {
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            outline: none;
             transition: 0.2s;
-            font-size:14px;
+            font-size: 14px;
         }
 
         input[type="file"]:hover,
-        input[type="number"]:focus{
-            border-color:#dd2476;
-            box-shadow: 0 0 0 4px rgba(221,36,118,0.15);
+        input[type="number"]:focus {
+            border-color: #dd2476;
+            box-shadow: 0 0 0 4px rgba(221, 36, 118, 0.15);
         }
 
-        .full-width{
+        .full-width {
             grid-column: 1 / -1;
         }
 
-        button{
-            padding:14px;
-            border:none;
-            border-radius:12px;
-            background: linear-gradient(135deg,#ff512f,#dd2476);
-            color:white;
-            font-size:16px;
-            font-weight:600;
-            cursor:pointer;
+        button {
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #ff512f, #dd2476);
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
             transition: 0.25s;
         }
 
-        button:hover{
+        button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(221,36,118,0.35);
+            box-shadow: 0 8px 20px rgba(221, 36, 118, 0.35);
         }
 
-        .message{
-            margin-top:20px;
-            padding:12px 15px;
-            border-radius:12px;
+        .message {
+            margin-top: 20px;
+            padding: 12px 15px;
+            border-radius: 12px;
             background: #eaffea;
             border: 1px solid #2ecc71;
-            color:#116b2d;
-            font-weight:600;
-            font-size:14px;
+            color: #116b2d;
+            font-weight: 600;
+            font-size: 14px;
         }
 
-        .frames-section{
-            margin-top:30px;
+        .frames-section {
+            margin-top: 30px;
         }
 
         .frames-section h3,
-        .video-section h3{
-            font-size:18px;
-            font-weight:700;
-            margin-bottom:12px;
-            color:#333;
+        .video-section h3 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #333;
         }
 
-        .frames-grid{
-            display:grid;
+        .frames-grid {
+            display: grid;
             grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
-            gap:12px;
+            gap: 12px;
         }
 
-        .frame-item{
-            background:#f8f8f8;
-            border:1px solid #eee;
-            border-radius:12px;
-            padding:10px;
-            display:flex;
-            justify-content:center;
-            align-items:center;
-            transition:0.2s;
+        .frame-item {
+            background: #f8f8f8;
+            border: 1px solid #eee;
+            border-radius: 12px;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: 0.2s;
         }
 
-        .frame-item:hover{
-            border-color:#dd2476;
+        .frame-item:hover {
+            border-color: #dd2476;
             transform: scale(1.05);
-            box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
         }
 
-        .frame-item img{
-            width:80px;
-            height:auto;
-            border-radius:8px;
+        .frame-item img {
+            width: 80px;
+            height: auto;
+            border-radius: 8px;
         }
 
-        .video-section{
-            margin-top:30px;
-            text-align:center;
+        .video-section {
+            margin-top: 30px;
+            text-align: center;
         }
 
-        video{
-            width:100%;
-            max-width:500px;
-            border-radius:15px;
-            border:3px solid #dd2476;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.18);
+        video {
+            width: 100%;
+            max-width: 500px;
+            border-radius: 15px;
+            border: 3px solid #dd2476;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.18);
         }
 
-        @media(max-width:650px){
-            form{
-                grid-template-columns:1fr;
+        @media(max-width:650px) {
+            form {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -205,17 +207,23 @@
                     <label>Number of Steps</label>
                     <input type="number" name="steps" min="2" value="10" required>
                 </div>
+                <label>Morphing Mode:</label><br>
+                <select name="mode">
+                    <option value="single">Single Digit</option>
+                    <option value="multi">Two Digits</option>
+                </select>
+                <br><br>
 
-                <div class="full-width">
+                <div class="full-width" style="text-align:center;">
                     <button type="submit">✨ Start Morphing</button>
                 </div>
             </form>
 
             {% if message %}
-                <div class="message">
-                    ✅ {{ message }} <br>
-                    <b>Steps:</b> {{ steps }}
-                </div>
+            <div class="message">
+                ✅ {{ message }} <br>
+                <b>Steps:</b> {{ steps }}
+            </div>
             {% endif %}
 
             {% if frames %}
@@ -223,15 +231,15 @@
                 <h3>Generated Frames</h3>
                 <div class="frames-grid">
                     {% for frame in frames %}
-                        <div class="frame-item">
-                            <img src="{{ frame }}" alt="Frame">
-                        </div>
+                    <div class="frame-item">
+                        <img src="{{ frame }}" alt="Frame">
+                    </div>
                     {% endfor %}
                 </div>
             </div>
             {% endif %}
 
-            {% if video_url %}
+            <!-- {% if video_url %}
             <div class="video-section">
                 <h3>Generated Morphing Video</h3>
                 <video controls>
@@ -239,8 +247,24 @@
                     Your browser does not support video playback.
                 </video>
             </div>
+            {% endif %} -->
+
+            {% if gif_url %}
+            <div class="gif-section" style="text-align:center;">
+                <h3>Generated Morphing GIF</h3>
+
+                <img src="{{ gif_url }}" alt="Morphing GIF" style="
+            width: 320px;
+            image-rendering: pixelated;
+            border: 2px solid #333;
+            border-radius: 8px;
+        ">
+            </div>
             {% endif %}
+
+
         </div>
     </div>
 </body>
+
 </html>
